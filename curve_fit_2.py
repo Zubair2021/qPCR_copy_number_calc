@@ -184,23 +184,4 @@ for j in range(int(num_unk)):
 df_unk = pd.DataFrame(unk)
 st.dataframe(df_unk)
 
-# Export unknowns
-csv2 = BytesIO()
-df_unk.to_csv(csv2, index=False)
-csv2.seek(0)
-st.download_button('Download Unknowns CSV', csv2, 'unknowns.csv')
 
-# Audit log
-with st.expander('Audit Log'):
-    for e in st.session_state.audit:
-        st.write(e)
-# Export unknowns
-csv2 = BytesIO()
-df_unk.to_csv(csv2, index=False)
-csv2.seek(0)
-st.download_button('Download Unknowns CSV', csv2, 'unknowns.csv')
-
-# Audit log
-with st.expander('Audit Log'):
-    for e in st.session_state.audit:
-        st.write(e)
