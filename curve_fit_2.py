@@ -165,7 +165,35 @@ if (rval**2) < r2_thresh:
 if not (min_slope <= slope <= max_slope):
     st.warning(f'Slope {slope:.3f} outside expected range ({min_slope} to {max_slope})')
 
-# Export standards and unknowns
+# Section 5: Calculate Unknowns
+st.markdown('---')
+st.header('5. Calculate Unknown Sample Copies')
+st.markdown('Enter each unknown sample’s Ct and dilution to get absolute copy numbers.')
+num_unk = st.number_input('Unknown count', min_value=1, max_value=12, value=3)
+unk = []
+for j in range(int(num_unk)):
+    a, b, c = st.columns(3)
+    nm = a.text_input('Name', value=f'U{j+1}', key=f'unm{j}')
+    ctu = b.number_input('Ct', min_value=0.0, value=25.0, step=0.1, key=f'ctu{j}')
+    du = c.number_input('Dilution', min_value=0.0, value=1.0, step=0.1, key=f'diu{j}')
+    logn = (ctu - intercept) / slope
+    cu = 10 ** logn * du
+    if ctu < df_std['Ct'].min() or ctu > df_std['Ct'].max():
+        b.warning('Ct out of standards range')
+    unk.append({'Name': nm, 'Ct': ctu, 'Dilution': du, 'Copies': cu})
+df_unk = pd.DataFrame(unk)
+st.dataframe(df_unk)
+
+# Export unknowns
+csv2 = BytesIO()
+df_unk.to_csv(csv2, index=False)
+csv2.seek(0)
+st.download_button('Download Unknowns CSV', csv2, 'unknowns.csv')
+
+# Audit log
+with st.expander('Audit Log'):
+    for e in st.session_state.audit:
+        st.write(e)
 # Export unknowns
 csv2 = BytesIO()
 df_unk.to_csv(csv2, index=False)
