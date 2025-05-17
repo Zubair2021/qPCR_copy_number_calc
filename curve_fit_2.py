@@ -152,6 +152,20 @@ if boot:
 else:
     st.write("Insufficient data for bootstrap confidence intervals.")
 
+# Section 4: Quality Control
+st.markdown('---')
+st.header('4. Quality Control')
+# User-configurable thresholds
+min_slope = st.number_input('Min acceptable slope', value=-3.6, step=0.01)
+max_slope = st.number_input('Max acceptable slope', value=-3.1, step=0.01)
+r2_thresh = st.number_input('Min acceptable R²', value=0.98, step=0.01)
+# Check metrics against thresholds
+if (rval**2) < r2_thresh:
+    st.warning(f'Low R²: {rval**2:.3f} below threshold {r2_thresh}')
+if not (min_slope <= slope <= max_slope):
+    st.warning(f'Slope {slope:.3f} outside expected range ({min_slope} to {max_slope})')
+
+# Export standards and unknowns
 # Export unknowns
 csv2 = BytesIO()
 df_unk.to_csv(csv2, index=False)
