@@ -61,7 +61,7 @@ with st.expander('Session Load/Save'):
 # Section 1: Define base copy
 st.markdown('---')
 st.header('1. Define Base Copy Number')
-method = st.selectbox('Method', ['Concentration & Length', 'Sequence'])
+method = st.selectbox('Method', ['Sequence', 'Concentration & Length'])
 if method=='Concentration & Length':
     conc = st.number_input('Stock conc (ng)', min_value=0.0, value=100.0)
     length = st.number_input('Seq length (bp)', min_value=1, value=1000)
